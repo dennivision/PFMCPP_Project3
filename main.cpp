@@ -57,59 +57,59 @@ Thing: Car Wash
  */
 
 /*
-Thing 1)
+Thing 1) Aquarium Tank
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1) the capacity of water it holds
+    2) the pH level of the water
+    3) the current water level
+    4) the amount of water that evaporates each day
+    5) the number of fish living in it
 3 things it can do:
-    1)
-    2)
-    3)
+    1) add fish
+    2) add water
+    3) adjust pH
  */
 
 /*
-Thing 2)
+Thing 2) Museum
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1) the number of exhibits
+    2) the number of employees
+    3) the total cost of utilities used each month
+    4) the monthly retail income amount
+    5) the amount of government subsidy recieved each month
 3 things it can do:
-    1)
-    2)
-    3)
+    1) charge visitor
+    2) add or remove employees
+    3) lobby politicians for more government funding
  */
 
 /*
-Thing 3)
+Thing 3) Subwoofer Factory
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1) amount of plywood in stock
+    2) number of subwoofer drivers in stock
+    3) number of employees
+    4) average number of subwoofers completed each day
+    5) inventory of completed subwoofers
 3 things it can do:
-    1)
-    2)
-    3)
+    1) assemble a subwoofer
+    2) purchase materials for subwoofers
+    3) sell a subwoofer
  */
 
 /*
-Thing 4)
+Thing 4) Freight Train
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1) the number of locomotives
+    2) the number of freight cars
+    3) the maximum cargo weight able to be pulled
+    4) the gross cargo weight in tons
+    5) the trains speed in miles per hour
 3 things it can do:
-    1)
-    2)
-    3)
+    1) proceed to next stop
+    2) pickup / dropoff cars
+    3) blow airhorn
  */
 
 
