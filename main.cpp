@@ -65,17 +65,17 @@ Part1 will be broken up into 5 separate steps
 */
 
 /*
-Thing 10)
+Thing 10) Tube Guitar Amp Combo
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1) Power Supply
+    2) Output Section
+    3) Preamp Section
+    4) EQ Controls (or Tone Stack)
+    5) Speaker Cabinet
 3 things it can do:
-    1)
-    2)
-    3)
+    1) Turn on / off
+    2) Adjust guitar EQ
+    3) Amplify guitar sound
  */
 
 
