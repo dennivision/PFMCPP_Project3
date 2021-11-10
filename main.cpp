@@ -81,99 +81,6 @@ Part1 will be broken up into 5 separate steps
 */
 
 /*
-Thing 5)
-5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
-3 things it can do:
-    1)
-    2)
-    3)
- */
-
-/*
-Thing 6)
-5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
-3 things it can do:
-    1)
-    2)
-    3)
- */
-
-/*
-Thing 7)
-5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
-3 things it can do:
-    1)
-    2)
-    3)
- */
-
-/*
-Thing 8)
-5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
-3 things it can do:
-    1)
-    2)
-    3)
- */
-
-/*
-Thing 9)
-5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
-3 things it can do:
-    1)
-    2)
-    3)
- */
-
-
-
-FIXME:
-3) Move the Thing 10 pseudo-code to after your Thing1-4 in the project.
-
-
-/*
-Thing 10) Tube Guitar Amp Combo
-5 properties:
-    1) Power Supply
-    2) Output Section
-    3) Preamp Section
-    4) EQ Controls (or Tone Stack)
-    5) Speaker Cabinet
-3 things it can do:
-    1) Turn on / off
-    2) Adjust guitar EQ
-    3) Amplify guitar sound
- */
-
-
-
-
-/*
 Thing 1) Aquarium Tank
 5 properties:
     1) the capacity of water it holds
@@ -229,7 +136,89 @@ Thing 4) Freight Train
     3) blow airhorn
  */
 
+/*
+Thing 5) Power Supply
+5 properties:
+    1) Mains Input voltage
+    2) Main Output Voltage (Vcc)
+    3) Heater Output Voltage
+    4) Maximum Current
+    5) Fuse state
+3 things it can do:
+    1) The mains input voltage can be switched on / off
+    2) the Main output voltage can be switched on independently (standby)
+    3) The mains fuse can blow
+ */
 
+/*
+Thing 6)
+5 properties:
+    1) the number of output tubes
+    2) the grid bias voltage
+    3) the output transformers primary impedance in Ohms
+    4) the output transformers secondary impedance in Ohms
+    5) the maximum output power in watts 
+3 things it can do:
+    1) Warm up tubes
+    2) Admust master output volume
+    3) Amplify line level audio to a speaker level signal
+ */
+
+/*
+Thing 7) Preamp Section
+5 properties:
+    1) the number of preamp tubes
+    2) the gain setting for channel 1
+    3) the gain setting for channel 2
+    4) the active channel
+    5) the grid bias resistor value for the second gain stage
+3 things it can do:
+    1) warm up tubes
+    2) Adjust channel gain setting
+    3) Amplify guitar level signal to line voltage level
+ */
+
+/*
+Thing 8) EQ Controls
+5 properties:
+    1) The high cut (or treble) setting
+    2) The midrange cut setting
+    3) The low frequency (or bass) cut setting 
+    4) the amount of out of phase post power amp feedback signal to mix in (presence)
+    5) is the EQ tone stack bypassed?
+3 things it can do:
+    1) Adjust Treble control knob
+    2) Adjust Bass control knob
+    3) Turn bypass on/off
+ */
+
+/*
+Thing 9) Speaker Cabinet
+5 properties:
+    1) the number of speakers
+    2) the speaker diameter
+    3) the cabinets max wattage
+    4) the cabinet impedance in ohms
+    5) the cabinets maximum reproduceable frequency
+3 things it can do:
+    1) convert voltage and current to sound
+    2) adjust load attenuator
+    3) release magic smoke
+ */
+
+/*
+Thing 10) Tube Guitar Amp Combo
+5 properties:
+    1) Power Supply
+    2) Output Section
+    3) Preamp Section
+    4) EQ Controls (or Tone Stack)
+    5) Speaker Cabinet
+3 things it can do:
+    1) Turn on / off
+    2) Adjust guitar EQ
+    3) Amplify guitar sound
+ */
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
