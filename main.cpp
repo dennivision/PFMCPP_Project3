@@ -139,11 +139,11 @@ Thing 4) Freight Train
 /*
 Thing 5) Power Supply
 5 properties:
-    1) Mains Input voltage
-    2) Main Output Voltage (Vcc)
-    3) Heater Output Voltage
-    4) Maximum Current
-    5) Fuse state
+    1) Mains Input voltage (float)
+    2) Main Output Voltage (Vcc) (float)
+    3) Heater Output Voltage (float)
+    4) Maximum Current (float)
+    5) Fuse state (bool)
 3 things it can do:
     1) The mains input voltage can be switched on / off
     2) the Main output voltage can be switched on independently (standby)
@@ -153,11 +153,11 @@ Thing 5) Power Supply
 /*
 Thing 6)
 5 properties:
-    1) the number of output tubes
-    2) the grid bias voltage
-    3) the output transformers primary impedance in Ohms
-    4) the output transformers secondary impedance in Ohms
-    5) the maximum output power in watts 
+    1) the number of output tubes (int)
+    2) the grid bias voltage (float)
+    3) the output transformers primary impedance in  (double)
+    4) the output transformers secondary impedance in Ohms (float)
+    5) the maximum output power in watts (float)
 3 things it can do:
     1) Warm up tubes
     2) Admust master output volume
@@ -167,11 +167,11 @@ Thing 6)
 /*
 Thing 7) Preamp Section
 5 properties:
-    1) the number of preamp tubes
-    2) the gain setting for channel 1
-    3) the gain setting for channel 2
-    4) the active channel
-    5) the grid bias resistor value for the second gain stage
+    1) the number of preamp tubes (int)
+    2) the gain setting for channel 1 (float)
+    3) the gain setting for channel 2 (float)
+    4) the active channel (int)
+    5) the grid bias resistor value for the second gain stage (int)
 3 things it can do:
     1) warm up tubes
     2) Adjust channel gain setting
@@ -181,11 +181,11 @@ Thing 7) Preamp Section
 /*
 Thing 8) EQ Controls
 5 properties:
-    1) The high cut (or treble) setting
-    2) The midrange cut setting
-    3) The low frequency (or bass) cut setting 
-    4) the amount of out of phase post power amp feedback signal to mix in (presence)
-    5) is the EQ tone stack bypassed?
+    1) The high cut (or treble) setting (float)
+    2) The midrange cut setting (float)
+    3) The low frequency (or bass) cut setting (float)
+    4) the amount of out of phase post power amp feedback signal to mix in (presence) (float)
+    5) is the EQ tone stack bypassed? (bool)
 3 things it can do:
     1) Adjust Treble control knob
     2) Adjust Bass control knob
@@ -195,11 +195,11 @@ Thing 8) EQ Controls
 /*
 Thing 9) Speaker Cabinet
 5 properties:
-    1) the number of speakers
-    2) the speaker diameter
-    3) the cabinets max wattage
-    4) the cabinet impedance in ohms
-    5) the cabinets maximum reproduceable frequency
+    1) the number of speakers (int)
+    2) the speaker diameter (int)
+    3) the cabinets max wattage (int)
+    4) the cabinet impedance in ohms (float)
+    5) the cabinets maximum reproduceable frequency (float)
 3 things it can do:
     1) convert voltage and current to sound
     2) adjust load attenuator
