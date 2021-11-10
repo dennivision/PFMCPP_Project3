@@ -83,11 +83,11 @@ Part1 will be broken up into 5 separate steps
 /*
 Thing 1) Aquarium Tank
 5 properties:
-    1) the capacity of water it holds
-    2) the pH level of the water
-    3) the current water level
-    4) the amount of water that evaporates each day
-    5) the number of fish living in it
+    1) the capacity of water it holds (float)
+    2) the pH level of the water (float)
+    3) the current water level (float)
+    4) the amount of water that evaporates each day (float)
+    5) the number of fish living in it (int)
 3 things it can do:
     1) add fish
     2) add water
@@ -97,11 +97,11 @@ Thing 1) Aquarium Tank
 /*
 Thing 2) Museum
 5 properties:
-    1) the number of exhibits
-    2) the number of employees
-    3) the total cost of utilities used each month
-    4) the monthly retail income amount
-    5) the amount of government subsidy recieved each month
+    1) the number of exhibits (int)
+    2) the number of employees (int)
+    3) the total cost of utilities used each month (float)
+    4) the monthly retail income amount (float)
+    5) the amount of government subsidy recieved each month (float)
 3 things it can do:
     1) charge visitor
     2) add or remove employees
@@ -111,11 +111,11 @@ Thing 2) Museum
 /*
 Thing 3) Subwoofer Factory
 5 properties:
-    1) amount of plywood in stock
-    2) number of subwoofer drivers in stock
-    3) number of employees
-    4) average number of subwoofers completed each day
-    5) inventory of completed subwoofers
+    1) amount of plywood in stock in boardfeet (float)
+    2) number of subwoofer drivers in stock (int)
+    3) number of employees (int)
+    4) average number of subwoofers completed each day (float)
+    5) inventory of completed subwoofers (int)
 3 things it can do:
     1) assemble a subwoofer
     2) purchase materials for subwoofers
@@ -125,11 +125,11 @@ Thing 3) Subwoofer Factory
 /*
 Thing 4) Freight Train
 5 properties:
-    1) the number of locomotives
-    2) the number of freight cars
-    3) the maximum cargo weight able to be pulled
-    4) the gross cargo weight in tons
-    5) the trains speed in miles per hour
+    1) the number of locomotives (int)
+    2) the number of freight cars (int)
+    3) the maximum cargo weight able to be pulled (float)
+    4) the gross cargo weight in tons (float)
+    5) the trains speed in miles per hour (float)
 3 things it can do:
     1) proceed to next stop
     2) pickup / dropoff cars
