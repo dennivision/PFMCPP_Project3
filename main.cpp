@@ -263,15 +263,15 @@ struct Museum
 
     struct Visitor
     {
-    std::string name = "visitor";
-    std::string nationality = "visitorsNationality";
-    int timesVisited = 0;
-    int age = 0;
-    float satisfaction = 0.5f;
+        std::string name = "visitor";
+        std::string nationality = "visitorsNationality";
+        int timesVisited = 0;
+        int age = 0;
+        float satisfaction = 0.5f;
 
-    float payAdmissionFee(float feeAmount);
-    void viewExhibit(int exhibitNum);
-    void payVendor(int vendorID, float amount);
+        float payAdmissionFee(float feeAmount);
+        void viewExhibit(int exhibitNum);
+        void payVendor(int vendorID, float amount);
     };
 
     // 1) charge visitor
@@ -345,7 +345,7 @@ struct FreightTrain
     // 2) pickup / dropoff cars
     void pickupOrDropoffCars(int numOfCars)
     {
-    numberOfFreightCars += numOfCars;
+        numberOfFreightCars += numOfCars;
     }
     // 3) blow airhorn
     void blowAirHorn(float durationInSeconds);
