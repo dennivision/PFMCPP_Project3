@@ -191,14 +191,14 @@ struct AquariumTank
             return (canLiveInThisWater(waterPH, waterSalinity) && (age < maxAge));
         }
     };
-    void addFish(Fish* fish, int quantity);
+    void addFish(Fish fish, int quantity);
     void addWater(float amountOfWater);
     void adjustPH(float phAdjustment);
 };
 
-void AquariumTank::addFish(AquariumTank::Fish *fish, int quantity)
+void AquariumTank::addFish(AquariumTank::Fish fish, int quantity)
 {
-    if( fish->canLiveInThisWater(pHLevel, 0.f))
+    if( fish.canLiveInThisWater(pHLevel, 0.f) )
     {
         //todo: add quantity of fish to a list
         fishLivingIn += quantity;
@@ -211,6 +211,7 @@ void AquariumTank::addWater(float amountOfWater)
     currentWaterAmount += amountOfWater;
     if(currentWaterAmount > waterCapacity)
         currentWaterAmount = waterCapacity; // maybe add a "spilled function to alert someone"
+
     currentWaterLevel = currentWaterAmount / waterCapacity;
 }
 
@@ -219,6 +220,7 @@ void AquariumTank::adjustPH(float phAdjustment)
     pHLevel += phAdjustment;
     if(pHLevel > 14.f)
         pHLevel = 14.f;
+
     if(pHLevel < 0.f)
         pHLevel = 0.f;
 }
@@ -239,7 +241,7 @@ struct Museum
         int age = 0;
         float satisfaction = 0.5f;
 
-        float payAdmissionFee(float feeAmount){return feeAmount;}
+        float payAdmissionFee(float feeAmount) { return feeAmount; }
         void viewExhibit(int exhibitNum);
         void payVendor(int vendorID, float amount);
     };
@@ -290,7 +292,7 @@ bool SubwooferFactory::assembleSubwoofer(float plywoodAmount, int driverAmount)
     {
         plywoodInStock -= plywoodAmount;
         subwooferDriversInStock -= driverAmount;
-        completedSubwoofers++;
+        ++completedSubwoofers;
         return true;
     }
     return false;
@@ -308,7 +310,7 @@ bool SubwooferFactory::sellSubwoofer(float price)
 {
     if(completedSubwoofers > 0 && price > 1.f)
     {
-        completedSubwoofers--;
+        --completedSubwoofers;
         return true;
     }
     return false;
@@ -358,23 +360,23 @@ struct PowerSupply
     void setPowerState(bool powerState);
     void setStandbyState(bool standbyState);
     void blowFuse(); //{ fuseState = false;}
-private:
-    bool _powerState = 1;
-    bool _standbyState = 1;
+
+    bool powerState = 1;
+    bool standbyState = 1;
     float powerTransformerMainRatio = 4.f;
     float powerTransformerHeaterRatio = 0.055f;
 };
 
 void PowerSupply::setPowerState(bool powerState)
 {
-    _powerState = powerState;
+    powerState = powerState;
     if(fuseState)
     {
-        if(_powerState)
+        if(powerState)
         {
             // do power on things like heater on and if standby on
             heaterOutputVoltage = mainsInputVoltage * powerTransformerHeaterRatio;
-            if (_standbyState)
+            if (standbyState)
                 mainOutputVoltage = mainsInputVoltage * powerTransformerMainRatio;
         }
         else
@@ -386,12 +388,12 @@ void PowerSupply::setPowerState(bool powerState)
     }
 }
 
-void PowerSupply::setStandbyState(bool standbyState)
+void PowerSupply::setStandbyState(bool state)
 {
-    _standbyState = standbyState;
+    standbyState = state;
     if(fuseState)
     {
-        if (_standbyState)
+        if (standbyState)
             mainOutputVoltage = mainsInputVoltage * powerTransformerMainRatio;
         else
             mainOutputVoltage = 0.f;
@@ -417,10 +419,9 @@ struct OutputSection
     void adjustMasterOutputVolume(float newVolume);
     float amplifyLineLevelAudioToSpeakerLevel(float inputSignal);
 
-private:
-    bool _tubesAreWarm;
-    float _masterOutputGain;
-    float _gainFactor = numberOfOutputTubes * 24.f;
+    bool tubesAreWarm;
+    float masterOutputGain;
+    float gainFactor = numberOfOutputTubes * 24.f;
 
 };
 
@@ -428,19 +429,19 @@ void OutputSection::warmUpTubes(float timeInMSTillWarm)
 {
     if (timeInMSTillWarm < 1000)
     {
-        _tubesAreWarm = true;
+        tubesAreWarm = true;
     }
 }
 
 void OutputSection::adjustMasterOutputVolume(float newVolume)
 {
-    _masterOutputGain = newVolume;
+    masterOutputGain = newVolume;
 }
 
 float OutputSection::amplifyLineLevelAudioToSpeakerLevel(float inputSignal)
 {
-    if(_tubesAreWarm)
-        return (inputSignal * _gainFactor * _masterOutputGain);
+    if(tubesAreWarm)
+        return (inputSignal * gainFactor * masterOutputGain);
     return 0.f;
 }
 
@@ -456,16 +457,15 @@ struct PreampSection
     void adjustChannelGain(int channel, float gain);
     float amplifyGuitarSignalToLineLevel(float inputSignal);
 
-private:
-    bool _tubesAreWarm;
-    float _gainFactor = numberOfPreampTubes * 50.f;
+    bool tubesAreWarm;
+    float gainFactor = numberOfPreampTubes * 50.f;
 };
 
 void PreampSection::warmUpTubes(float timeInMSTillWarm)
 {
     if (timeInMSTillWarm < 1000)
     {
-        _tubesAreWarm = true;
+        tubesAreWarm = true;
     }
 }
 
@@ -483,9 +483,9 @@ void PreampSection::adjustChannelGain(int channel, float gain)
 
 float PreampSection::amplifyGuitarSignalToLineLevel(float inputSignal)
 {
-    if(_tubesAreWarm)
+    if(tubesAreWarm)
     {
-        float s = inputSignal * _gainFactor;
+        float s = inputSignal * gainFactor;
         if(activeChannel == 0)
             return (s * channelOneGain);
         else if(activeChannel == 1)
@@ -535,13 +535,13 @@ struct SpeakerCabinet
     double convertPowerToSound( float inputVoltage );
     void setAttenuatorValue( float value );
     void releaseMagicSmoke();
-private:
-    bool _speakersNotBlown = true;
+
+    bool speakersNotBlown = true;
 };
 
 double SpeakerCabinet::convertPowerToSound(float inputVoltage)
 {
-    if(_speakersNotBlown)
+    if(speakersNotBlown)
     {
         float wattageRequsted = inputVoltage * (inputVoltage / impedance);
         double pascalsPerWatt = 2; // - using pascals because dB logarithmic stuff hard without framework to do math for me
@@ -550,18 +550,14 @@ double SpeakerCabinet::convertPowerToSound(float inputVoltage)
             // convert votage to assuming 2 pascals per watt 
             return(static_cast<double>(inputVoltage) * (pascalsPerWatt * static_cast<double>(wattageRequsted)));
         }
-        else
-        {
-            releaseMagicSmoke();
-            return 0;
-        }
+        releaseMagicSmoke();
     }
     return 0;
 }
 
 void SpeakerCabinet::releaseMagicSmoke()
 {
-    _speakersNotBlown = false;
+    speakersNotBlown = false;
 }
 
 struct TubeGuitarAmpCombo
@@ -601,16 +597,13 @@ void TubeGuitarAmpCombo::adjustEQ(int band, float value)
 
 double TubeGuitarAmpCombo::amplifyGuitarSound(float guitarSignal)
 {
-    if (ps.fuseState && ps.heaterOutputVoltage > 0.f && ps.mainOutputVoltage > 0.f)
+    if (ps.fuseState && ps.powerState && ps.standbyState)
     {
         float preampOutput = preampSection.amplifyGuitarSignalToLineLevel(guitarSignal);
         float powerAmpOutput = outputSection.amplifyLineLevelAudioToSpeakerLevel(preampOutput);
         return cabinet.convertPowerToSound(powerAmpOutput);
     }
-    else // amp is off or blown
-    {
-        return 0;
-    }
+    return 0;
 }
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
