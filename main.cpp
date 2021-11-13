@@ -200,7 +200,6 @@ void AquariumTank::addFish(AquariumTank::Fish fish, int quantity)
 {
     if( fish.canLiveInThisWater(pHLevel, 0.f) )
     {
-        //todo: add quantity of fish to a list
         fishLivingIn += quantity;
     }
 }
@@ -210,7 +209,7 @@ void AquariumTank::addWater(float amountOfWater)
     float currentWaterAmount = waterCapacity * currentWaterLevel;
     currentWaterAmount += amountOfWater;
     if(currentWaterAmount > waterCapacity)
-        currentWaterAmount = waterCapacity; // maybe add a "spilled function to alert someone"
+        currentWaterAmount = waterCapacity;
 
     currentWaterLevel = currentWaterAmount / waterCapacity;
 }
@@ -255,14 +254,6 @@ float Museum::chargeVisitor(float amountToCharge, Museum::Visitor visitor)
 {
     return visitor.payAdmissionFee(amountToCharge);
 }
-
-/*
-// defined this one inline already, leaving it in so I can be yelled at?
-void Museum::addOrRemoveEmployees(int numberOfEmployees)
-{
-    employeeCount += numberOfEmployees;
-}
-*/
 
 void Museum::lobbyPoliticians(float bribeAmount)
 {
@@ -352,8 +343,8 @@ void FreightTrain::blowAirHorn(float durationInSeconds)
 struct PowerSupply
 {
     float mainsInputVoltage = 115.f;
-    float mainOutputVoltage = 460.f;
-    float heaterOutputVoltage = 6.325f;
+    float mainOutputVoltage = 0.f;
+    float heaterOutputVoltage = 0.f;
     float maximumCurrentInAmps = 1.f;
     bool fuseState { true };
 
@@ -361,8 +352,8 @@ struct PowerSupply
     void setStandbyState(bool standbyState);
     void blowFuse(); //{ fuseState = false;}
 
-    bool powerState = 1;
-    bool standbyState = 1;
+    bool powerState = false;
+    bool standbyState = false;
     float powerTransformerMainRatio = 4.f;
     float powerTransformerHeaterRatio = 0.055f;
 };
@@ -374,14 +365,12 @@ void PowerSupply::setPowerState(bool powerState)
     {
         if(powerState)
         {
-            // do power on things like heater on and if standby on
             heaterOutputVoltage = mainsInputVoltage * powerTransformerHeaterRatio;
             if (standbyState)
                 mainOutputVoltage = mainsInputVoltage * powerTransformerMainRatio;
         }
         else
         {
-            // do power off things
             mainOutputVoltage = 0.f;
             heaterOutputVoltage = 0.f;
         }
@@ -419,8 +408,8 @@ struct OutputSection
     void adjustMasterOutputVolume(float newVolume);
     float amplifyLineLevelAudioToSpeakerLevel(float inputSignal);
 
-    bool tubesAreWarm;
-    float masterOutputGain;
+    bool tubesAreWarm = false;
+    float masterOutputGain = 0.5f;
     float gainFactor = numberOfOutputTubes * 24.f;
 
 };
@@ -457,7 +446,7 @@ struct PreampSection
     void adjustChannelGain(int channel, float gain);
     float amplifyGuitarSignalToLineLevel(float inputSignal);
 
-    bool tubesAreWarm;
+    bool tubesAreWarm = false;
     float gainFactor = numberOfPreampTubes * 50.f;
 };
 
