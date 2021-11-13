@@ -358,9 +358,9 @@ struct PowerSupply
     float powerTransformerHeaterRatio = 0.055f;
 };
 
-void PowerSupply::setPowerState(bool powerState)
+void PowerSupply::setPowerState(bool state)
 {
-    powerState = powerState;
+    powerState = state;
     if(fuseState)
     {
         if(powerState)
