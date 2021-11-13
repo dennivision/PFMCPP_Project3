@@ -108,8 +108,46 @@ struct CarWash
     You'll need to insert the Person struct from the video in the space below.
  */
 
+struct Person
+{
+    int age;
+    int height;
+    float hairLength;
+    float GPA;
+    unsigned int SATScore;
+    int distanceTraveled;
 
+    struct Foot
+    {
+        int _stepSize = 2;
 
+        void stepForward(){}
+        int stepSize(){return _stepSize;}
+    };
+
+    Foot leftFoot;
+    Foot rightFoot;
+
+    void run(int howFast, bool startWithLeftFoot);
+};
+
+void Person::run(int howFast, bool startWithLeftFoot)
+{
+    if (howFast > 0)
+    {
+        if( startWithLeftFoot )
+        {
+            leftFoot.stepForward();
+            rightFoot.stepForward();
+        }
+        else
+        {
+            rightFoot.stepForward();
+            leftFoot.stepForward();
+        }
+        distanceTraveled += leftFoot.stepSize() + rightFoot.stepSize();
+    }    
+}
 
 
  /*
@@ -125,32 +163,12 @@ struct CarWash
  if your code produces a -Wpadded warning, add '-Wno-padded' to the .replit file with the other compiler flags (-Weverything -Wno-missing-prototypes etc etc)
  */
 
-
-
-/*
-Thing 1) Aquarium Tank
-5 properties:
-    1) the capacity of water it holds (float)
-    2) the pH level of the water (float)
-    3) the current water level (float)
-    4) the amount of water that evaporates each day (float)
-    5) the number of fish living in it (int)
-3 things it can do:
-    1) add fish
-    2) add water
-    3) adjust pH
- */
 struct AquariumTank
 {
-    //1) the capacity of water it holds (float)
     float waterCapacity = 10.f;
-    //2) the pH level of the water (float)
     float pHLevel = 7.f;
-    //3) the current water level (float)
     float currentWaterLevel = 0.7f;
-    //4) the amount of water that evaporates each day (double)
     double evaporationRate = 0.0000005;
-    //5) the number of fish living in it (int)
     int fishLivingIn = 0;
     struct Fish
     {
@@ -159,47 +177,58 @@ struct AquariumTank
         float maxSalinity = 0.5f;
         float age = 0.f;
         float maxAge = 3.f;
+        ~Fish(){}
 
-        //
-        bool canLiveInThisWater(float waterPH, float waterSalinity);
+        bool canLiveInThisWater(float waterPH, float waterSalinity)
+        {
+            if((waterPH >= 6.f && waterPH <= 8.f) && (waterSalinity < maxSalinity))
+                return true;
+            return false;
+        }
         void ageFish(float amountOfTime);
         bool isStillAlive(float waterPH, float waterSalinity)
         {
             return (canLiveInThisWater(waterPH, waterSalinity) && (age < maxAge));
         }
     };
-    // 1) add fish
-    void addFish(Fish fish, int Quantity);
-    // 2) add water
+    void addFish(Fish* fish, int quantity);
     void addWater(float amountOfWater);
-    // 3) adjust pH
     void adjustPH(float phAdjustment);
 };
 
-/*
-Thing 2) Museum
-5 properties:
-    1) the number of exhibits (int)
-    2) the number of employees (int)
-    3) the total cost of utilities used each month (float)
-    4) the monthly retail income amount (float)
-    5) the amount of government subsidy recieved each month (double)
-3 things it can do:
-    1) charge visitor
-    2) add or remove employees
-    3) lobby politicians for more government funding
- */
+void AquariumTank::addFish(AquariumTank::Fish *fish, int quantity)
+{
+    if( fish->canLiveInThisWater(pHLevel, 0.f))
+    {
+        //todo: add quantity of fish to a list
+        fishLivingIn += quantity;
+    }
+}
+
+void AquariumTank::addWater(float amountOfWater)
+{
+    float currentWaterAmount = waterCapacity * currentWaterLevel;
+    currentWaterAmount += amountOfWater;
+    if(currentWaterAmount > waterCapacity)
+        currentWaterAmount = waterCapacity; // maybe add a "spilled function to alert someone"
+    currentWaterLevel = currentWaterAmount / waterCapacity;
+}
+
+void AquariumTank::adjustPH(float phAdjustment)
+{
+    pHLevel += phAdjustment;
+    if(pHLevel > 14.f)
+        pHLevel = 14.f;
+    if(pHLevel < 0.f)
+        pHLevel = 0.f;
+}
+
 struct Museum
 {
-    // 1) the number of exhibits (int)
     int exhibitCount = 5;
-    // 2) the number of employees (int)
     int employeeCount = 0;
-    // 3) the total cost of utilities used each month (float)
     float UtilityCost = 3500.f;
-    // 4) the monthly retail income amount (float)
     float monthlyRetailIncome = 5000.f;
-    //5) the amount of government subsidy recieved each month (double)
     double monthlyGovernmentSubsidy = 15000;
 
     struct Visitor
@@ -210,285 +239,379 @@ struct Museum
         int age = 0;
         float satisfaction = 0.5f;
 
-        float payAdmissionFee(float feeAmount);
+        float payAdmissionFee(float feeAmount){return feeAmount;}
         void viewExhibit(int exhibitNum);
         void payVendor(int vendorID, float amount);
     };
 
-    // 1) charge visitor
-    void chargeVisitor(float amountToCharge, Visitor visitor) ;
-    // 2) add or remove employees
+    float chargeVisitor(float amountToCharge, Visitor visitor) ;
     void addOrRemoveEmployees(int numberOfEmployees) { employeeCount += numberOfEmployees; }
-    // 3) lobby politicians for more government funding
     void lobbyPoliticians(float bribeAmount);
 };
+
+float Museum::chargeVisitor(float amountToCharge, Museum::Visitor visitor)
+{
+    return visitor.payAdmissionFee(amountToCharge);
+}
+
 /*
-Thing 3) Subwoofer Factory
-5 properties:
-    1) amount of plywood in stock in boardfeet (float)
-    2) number of subwoofer drivers in stock (int)
-    3) number of employees (int)
-    4) average number of subwoofers completed each day (float)
-    5) inventory of completed subwoofers (int)
-3 things it can do:
-    1) assemble a subwoofer
-    2) purchase materials for subwoofers
-    3) sell a subwoofer
- */
+// defined this one inline already, leaving it in so I can be yelled at?
+void Museum::addOrRemoveEmployees(int numberOfEmployees)
+{
+    employeeCount += numberOfEmployees;
+}
+*/
+
+void Museum::lobbyPoliticians(float bribeAmount)
+{
+    if(bribeAmount > 10000.f)
+    {
+        monthlyGovernmentSubsidy += 2500;
+    }
+}
+
+
 struct SubwooferFactory
 {
-    // 1) amount of plywood in stock in boardfeet (float)
     float plywoodInStock = 0.f;
-    // 2) number of subwoofer drivers in stock (int)
-    int subwwoferDriversInStock = 0;
-    // 3) number of employees (int)
+    int subwooferDriversInStock = 0;
     int numberOfEmpoyees = 0;
-    // 4) average number of subwoofers completed each day (float)
     float averageNumberOfSubwoofersCompletedEachDay = 0;
-    // 5) inventory of completed subwoofers (int)
     int completedSubwoofers = 0;
 
-    // 1) assemble a subwoofer
     bool assembleSubwoofer(float plywoodAmount, int driverAmount);
-    // 2) purchase plywood for subwoofers
     void purchasePlywood(int sheets, float thickness);
-    // 3) sell a subwoofer
     bool sellSubwoofer(float price);
 };
-/*
-Thing 4) Freight Train
-5 properties:
-    1) the number of locomotives (int)
-    2) the number of freight cars (int)
-    3) the maximum cargo weight able to be pulled (float)
-    4) the gross cargo weight in tons (float)
-    5) the conductors name (std::string)
-3 things it can do:
-    1) proceed to next stop
-    2) pickup / dropoff cars
-    3) blow airhorn
- */
+
+bool SubwooferFactory::assembleSubwoofer(float plywoodAmount, int driverAmount)
+{
+    if (plywoodAmount <= plywoodInStock && driverAmount <= subwooferDriversInStock)
+    {
+        plywoodInStock -= plywoodAmount;
+        subwooferDriversInStock -= driverAmount;
+        completedSubwoofers++;
+        return true;
+    }
+    return false;
+}
+
+void SubwooferFactory::purchasePlywood(int sheets, float thickness)
+{
+    if (thickness == 0.75f)
+    {
+        plywoodInStock += (sheets * 8.f);
+    }
+}
+
+bool SubwooferFactory::sellSubwoofer(float price)
+{
+    if(completedSubwoofers > 0 && price > 1.f)
+    {
+        completedSubwoofers--;
+        return true;
+    }
+    return false;
+}
+
 struct FreightTrain
 {
-    // 1) the number of locomotives (int)
     int numberOfLocomotives = 1;
-    // 2) the number of freight cars (int)
     int numberOfFreightCars = 1;
-    // 3) the maximum cargo weight able to be pulled (float)
     float maxCargoWeight { numberOfLocomotives * 8000.f };
-    // 4) the gross cargo weight in tons (float)
     float grossCargoWeight { numberOfFreightCars * 110.f };
-    // 5) the conductors name (std::string)
     std::string conductorName = "conductor";
 
-    // 1) proceed to next stop
     void proceedToNextStop();
-    // 2) pickup / dropoff cars
-    void pickupOrDropoffCars(int numOfCars)
-    {
-        numberOfFreightCars += numOfCars;
-    }
-    // 3) blow airhorn
+    void pickupOrDropoffCars(int numOfCars);
     void blowAirHorn(float durationInSeconds);
 };
-/*
-Thing 5) Power Supply
-5 properties:
-    1) Mains Input voltage (float)
-    2) Main Output Voltage (Vcc) (float)
-    3) Heater Output Voltage (float)
-    4) Maximum Current (float)
-    5) Fuse state (bool)
-3 things it can do:
-    1) The mains input voltage can be switched on / off
-    2) the Main output voltage can be switched on independently (standby)
-    3) The mains fuse can blow
-*/
+
+void FreightTrain::proceedToNextStop()
+{
+    blowAirHorn(5.f);
+}
+
+void FreightTrain::pickupOrDropoffCars(int numOfCars)
+{
+    numberOfFreightCars += numOfCars;
+    if (numberOfFreightCars < 0)
+        numberOfFreightCars = 0;
+}
+
+void FreightTrain::blowAirHorn(float durationInSeconds)
+{
+    if (durationInSeconds > 0.f)
+    {
+        // do something noisy for durationInSeconds
+    }
+}
+
 struct PowerSupply
 {
-    // 1) Mains Input voltage (float)
-    float mainsInputVoltage = 110.f;
-    // 2) Main Output Voltage (Vcc) (float)
-    float mainOutputVoltage = 450.f;
-    // 3) Heater Output Voltage (float)
-    float heaterOutputVoltage = 6.3f;
-    // 4) Maximum Current (float)
+    float mainsInputVoltage = 115.f;
+    float mainOutputVoltage = 460.f;
+    float heaterOutputVoltage = 6.325f;
     float maximumCurrentInAmps = 1.f;
-    // 5) Fuse state (bool)
     bool fuseState { true };
 
-    // 1) The mains input voltage can be switched on / off
     void setPowerState(bool powerState);
-    // 2) the Main output voltage can be switched on independently (standby)
     void setStandbyState(bool standbyState);
-    // 3) The mains fuse can blow
-    void blowFuse() { fuseState = false;}
+    void blowFuse(); //{ fuseState = false;}
+private:
+    bool _powerState = 1;
+    bool _standbyState = 1;
+    float powerTransformerMainRatio = 4.f;
+    float powerTransformerHeaterRatio = 0.055f;
 };
-/*
-Thing 6) Output Section
-5 properties:
-    1) the number of output tubes (int)
-    2) the grid bias voltage (float)
-    3) the output transformers primary impedance in  (double)
-    4) the output transformers secondary impedance in Ohms (float)
-    5) the maximum output power in watts (float)
-3 things it can do:
-    1) Warm up tubes
-    2) Admust master output volume
-    3) Amplify line level audio to a speaker level signal
- */
+
+void PowerSupply::setPowerState(bool powerState)
+{
+    _powerState = powerState;
+    if(fuseState)
+    {
+        if(_powerState)
+        {
+            // do power on things like heater on and if standby on
+            heaterOutputVoltage = mainsInputVoltage * powerTransformerHeaterRatio;
+            if (_standbyState)
+                mainOutputVoltage = mainsInputVoltage * powerTransformerMainRatio;
+        }
+        else
+        {
+            // do power off things
+            mainOutputVoltage = 0.f;
+            heaterOutputVoltage = 0.f;
+        }
+    }
+}
+
+void PowerSupply::setStandbyState(bool standbyState)
+{
+    _standbyState = standbyState;
+    if(fuseState)
+    {
+        if (_standbyState)
+            mainOutputVoltage = mainsInputVoltage * powerTransformerMainRatio;
+        else
+            mainOutputVoltage = 0.f;
+    }
+}
+
+void PowerSupply::blowFuse()
+{
+    fuseState = false;
+    mainOutputVoltage = 0;
+    heaterOutputVoltage = 0;
+}
+
 struct OutputSection
 {
-    // 1) the number of output tubes (int)
     int numberOfOutputTubes = 2;
-    // 2) the grid bias voltage (float)
     float gridBiasVoltage = -50.f;
-    // 3) the output transformers primary impedance in Ohms (double)
     double outputTransformerPrimaryImpedance { 2600 };
-    // 4) the output transformers secondary impedance in Ohms (float)
     float outputTransformerSecondaryImpedance = 8.f;
-    // 5) the maximum output power in watts (float)
     float maxOutputPower = 50.f;
 
-    // 1) Warm up tubes
     void warmUpTubes(float timeInMSTillWarm);
-    // 2) Admust master output volume
     void adjustMasterOutputVolume(float newVolume);
-    // 3) Amplify line level audio to a speaker level signal
     float amplifyLineLevelAudioToSpeakerLevel(float inputSignal);
+
+private:
+    bool _tubesAreWarm;
+    float _masterOutputGain;
+    float _gainFactor = numberOfOutputTubes * 24.f;
+
 };
-/*
-Thing 7) Preamp Section
-5 properties:
-    1) the number of preamp tubes (int)
-    2) the gain setting for channel 1 (float)
-    3) the gain setting for channel 2 (float)
-    4) the active channel (int)
-    5) the cathode bias resistor value for the second gain stage (int)
-3 things it can do:
-    1) warm up tubes
-    2) Adjust channel gain setting
-    3) Amplify guitar level signal to line voltage level
- */
+
+void OutputSection::warmUpTubes(float timeInMSTillWarm)
+{
+    if (timeInMSTillWarm < 1000)
+    {
+        _tubesAreWarm = true;
+    }
+}
+
+void OutputSection::adjustMasterOutputVolume(float newVolume)
+{
+    _masterOutputGain = newVolume;
+}
+
+float OutputSection::amplifyLineLevelAudioToSpeakerLevel(float inputSignal)
+{
+    if(_tubesAreWarm)
+        return (inputSignal * _gainFactor * _masterOutputGain);
+    return 0.f;
+}
+
 struct PreampSection
 {
-    // 1) the number of preamp tubes (int)
     int numberOfPreampTubes = 2;
-    // 2) the gain setting for channel 1 (float)
     float channelOneGain = 0.33f;
-    // 3) the gain setting for channel 2 (float)
     float channelTwoGain = 0.33f;
-    // 4) the active channel (int)
     int activeChannel = 0;
-    // 5) the cathode bias resistor value for the second gain stage (int)
     int stageTwoBiasResistorValue = 820;
 
-    // 1) warm up tubes
     void warmUpTubes(float timeInMSTillWarm);
-    // 2) Adjust channel gain setting
     void adjustChannelGain(int channel, float gain);
-    // 3) Amplify guitar level signal to line voltage level
-    float amplifyGuitarSignalToSpeakerLevel(float inputSignal);
+    float amplifyGuitarSignalToLineLevel(float inputSignal);
+
+private:
+    bool _tubesAreWarm;
+    float _gainFactor = numberOfPreampTubes * 50.f;
 };
-/*
-Thing 8) EQ Controls
-5 properties:
-    1) The high cut (or treble) setting (float)
-    2) The midrange cut setting (float)
-    3) The low frequency (or bass) cut setting (float)
-    4) the amount of out of phase post power amp feedback signal to mix in (presence) (float)
-    5) is the EQ tone stack bypassed? (bool)
-3 things it can do:
-    1) Adjust Treble control knob
-    2) Adjust Bass control knob
-    3) Turn bypass on/off
- */
+
+void PreampSection::warmUpTubes(float timeInMSTillWarm)
+{
+    if (timeInMSTillWarm < 1000)
+    {
+        _tubesAreWarm = true;
+    }
+}
+
+void PreampSection::adjustChannelGain(int channel, float gain)
+{
+    if(channel == 0)
+    {
+        channelOneGain = gain;
+    }
+    else
+    {
+        channelTwoGain = gain;
+    }
+}
+
+float PreampSection::amplifyGuitarSignalToLineLevel(float inputSignal)
+{
+    if(_tubesAreWarm)
+    {
+        float s = inputSignal * _gainFactor;
+        if(activeChannel == 0)
+            return (s * channelOneGain);
+        else if(activeChannel == 1)
+            return (s * channelTwoGain);
+        else
+            return 0.f;
+    }
+    return 0.f;
+}
+
 struct EQControls
 {
-    // 1) The high cut (or treble) setting (float)
     float trebleSetting = 0.5f;
-    // 2) The midrange cut setting (float)
     float midrangeSetting = 0.5f;
-    // 3) The low frequency (or bass) cut setting (float)
     float lowSetting = 0.5f;
-    // 4) the amount of out of phase post power amp feedback signal to mix in (presence) (float)
     float presenceSetting { 0.5f };
-    // 5) is the EQ tone stack bypassed? (bool)
     bool isBypassed = false;
 
-    //1) Adjust Treble control knob
     void adjustTrebleSetting(float value);
-    //2) Adjust Bass control knob
     void adjustBassSetting(float value);
-    //3) Turn bypass on/off
     void setBypass(bool value);
 };
-/*
-Thing 9) Speaker Cabinet
-5 properties:
-    1) the number of speakers (int)
-    2) the speaker diameter (int)
-    3) the cabinets max wattage (int)
-    4) the cabinet impedance in ohms (float)
-    5) the cabinets maximum reproduceable frequency (float)
-3 things it can do:
-    1) convert voltage and current to sound
-    2) adjust load attenuator
-    3) release magic smoke
- */
+
+void EQControls::adjustTrebleSetting(float value)
+{
+    trebleSetting = value;
+}
+
+void EQControls::adjustBassSetting(float value)
+{
+    lowSetting = value;
+}
+
+void EQControls::setBypass(bool value)
+{
+    isBypassed = value;
+}
+
 struct SpeakerCabinet
 {
-    // 1) the number of speakers (int)
     int numberOfSpeakers = 1;
-    // 2) the speaker diameter (int)
     int speakerDiameter = 12;
-    // 3) the cabinets max wattage (int)
     int maxWattage = 70;
-    // 4) the cabinet impedance in ohms (float)
     float impedance = 8.f;
-    // 5) the cabinets maximum reproduceable frequency (float)
     float maxFrequency = 6000.f;
 
-    // 1) convert voltage and current to sound
     double convertPowerToSound( float inputVoltage );
-    // 2) adjust load attenuator
     void setAttenuatorValue( float value );
-    // 3) release magic smoke
     void releaseMagicSmoke();
+private:
+    bool _speakersNotBlown = true;
 };
-/*
-Thing 10) Tube Guitar Amp Combo
-5 properties:
-    1) Power Supply
-    2) Output Section
-    3) Preamp Section
-    4) EQ Controls (or Tone Stack)
-    5) Speaker Cabinet
-3 things it can do:
-    1) Turn on / off
-    2) Adjust guitar EQ
-    3) Amplify guitar sound
- */
+
+double SpeakerCabinet::convertPowerToSound(float inputVoltage)
+{
+    if(_speakersNotBlown)
+    {
+        float wattageRequsted = inputVoltage * (inputVoltage / impedance);
+        double pascalsPerWatt = 2; // - using pascals because dB logarithmic stuff hard without framework to do math for me
+        if(wattageRequsted <= maxWattage * 1.1f)
+        {
+            // convert votage to assuming 2 pascals per watt 
+            return(static_cast<double>(inputVoltage) * (pascalsPerWatt * static_cast<double>(wattageRequsted)));
+        }
+        else
+        {
+            releaseMagicSmoke();
+            return 0;
+        }
+    }
+    return 0;
+}
+
+void SpeakerCabinet::releaseMagicSmoke()
+{
+    _speakersNotBlown = false;
+}
+
 struct TubeGuitarAmpCombo
 {
-    // 1) Power Supply
     PowerSupply ps;
-    // 2) Output Section
     OutputSection outputSection;
-    // 3) Preamp Section
     PreampSection preampSection;
-    // 4) EQ Controls (or Tone Stack)
     EQControls eq;
-    // 5) Speaker Cabinet
     SpeakerCabinet cabinet;
 
-    // 1) Turn on / off
     void setPowerState( bool value );
-    // 2) Adjust guitar EQ
     void adjustEQ( int band, float value );
-    //3) Amplify guitar sound
     double amplifyGuitarSound( float guitarSignal );
 };
+
+void TubeGuitarAmpCombo::setPowerState(bool value)
+{
+    ps.setPowerState(value);
+    if(ps.heaterOutputVoltage > 0.f)
+    {
+        outputSection.warmUpTubes(200.f);
+        preampSection.warmUpTubes(100.f);
+    }
+}
+
+void TubeGuitarAmpCombo::adjustEQ(int band, float value)
+{
+    if (band == 0) // lowSetting
+    {
+        eq.adjustBassSetting(value);
+    }
+    else if (band == 2) // trebleSetting
+    {
+        eq.adjustTrebleSetting(value);
+    }
+}
+
+double TubeGuitarAmpCombo::amplifyGuitarSound(float guitarSignal)
+{
+    if (ps.fuseState && ps.heaterOutputVoltage > 0.f && ps.mainOutputVoltage > 0.f)
+    {
+        float preampOutput = preampSection.amplifyGuitarSignalToLineLevel(guitarSignal);
+        float powerAmpOutput = outputSection.amplifyLineLevelAudioToSpeakerLevel(preampOutput);
+        return cabinet.convertPowerToSound(powerAmpOutput);
+    }
+    else // amp is off or blown
+    {
+        return 0;
+    }
+}
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
