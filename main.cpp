@@ -142,7 +142,7 @@ void AquariumTank::addWater(float amountOfWater)
     float currentWaterAmount = waterCapacity * currentWaterLevel;
     std::cout   << "AquariumTank::addWater() trying to add " << std::defaultfloat << amountOfWater << " gallons of water to a "
                 << waterCapacity << " gallon tank"
-                << " that's filled to " << std::fixed << std::setprecision(2) << (100 * currentWaterLevel) << "% of its capacity" << std::endl; 
+                << " that's filled to " << std::fixed << (100 * currentWaterLevel) << "% of its capacity" << std::endl; 
     currentWaterAmount += amountOfWater;
     if(currentWaterAmount > waterCapacity)
     {
@@ -151,7 +151,7 @@ void AquariumTank::addWater(float amountOfWater)
     }
 
     currentWaterLevel = currentWaterAmount / waterCapacity;
-    std::cout   << "AquariumTank::addWater() new water level: " << std::fixed << std::setprecision(2) << (100 * currentWaterLevel)
+    std::cout   << "AquariumTank::addWater() new water level: " << std::fixed << (100 * currentWaterLevel)
                 << "% of " << std::defaultfloat <<  waterCapacity << " gallons" << std::endl; 
 }
 
@@ -192,7 +192,7 @@ struct Museum
         {
             ++timesVisited; // bit confused why this doesn't appear to update the timesVisited int
             std::cout   << "Museum::Vistor:payAdmissionFee() - A visitor named '" << name << "' payed an admmission fee of $"
-                        << std::fixed << std::setprecision(2) << feeAmount << " and has now visited " << timesVisited << " times" << std::endl;
+                        << std::fixed << feeAmount << " and has now visited " << timesVisited << " times" << std::endl;
             return feeAmount;
         }
         void viewExhibit(int exhibitNum);
@@ -221,7 +221,7 @@ void Museum::lobbyPoliticians(float bribeAmount)
 {
     if(bribeAmount > 10000.f)
     {
-        std::cout << "Museum::lobbyPoliticians() success! $" << std::fixed << std::setprecision(2) << bribeAmount << " dollars was a large enough bribe!" << std::endl;std::cout << std::defaultfloat; // reset the io stream to clear formatting 
+        std::cout << "Museum::lobbyPoliticians() success! $" << std::fixed << bribeAmount << " dollars was a large enough bribe!" << std::endl;std::cout << std::defaultfloat; // reset the io stream to clear formatting 
         monthlyGovernmentSubsidy += 2500;
         return;
     }
@@ -242,7 +242,7 @@ void Museum::Visitor::payVendor(int vendorID, float amount)
 struct SubwooferFactory
 {
     float plywoodInStock = 0.f;
-    int subwooferDriversInStock = 0;
+    int subwooferDriversInStock = 20;
     int numberOfEmpoyees = 0;
     float averageNumberOfSubwoofersCompletedEachDay = 0;
     int completedSubwoofers = 0;
@@ -265,7 +265,6 @@ bool SubwooferFactory::assembleSubwoofer(float plywoodAmount, int driverAmount)
         plywoodInStock -= plywoodAmount;
         subwooferDriversInStock -= driverAmount;
         ++completedSubwoofers;
-        std::cout << "SubwooferFactory::assembleSubwoofer() success! There are " << completedSubwoofers << " completed subwoofers in stock." << std::endl; 
         return true;
     }
     return false;
@@ -276,10 +275,10 @@ void SubwooferFactory::purchasePlywood(int sheets, float thickness)
     if (thickness == 0.75f)
     {
         plywoodInStock += (sheets * 8.f);
+        std::cout << "SubwooferFactory::purchasePlywood() Success! There is now " << plywoodInStock << " feet of plywood in stock" << std::endl;
+        return;
     }
-    {
-        std::cout << "SubwooferFactory::purchasePlywood() 3/4\" plywood is needed! " << thickness << " is not a valid thickness." << std::endl;
-    }
+    std::cout << "SubwooferFactory::purchasePlywood() 3/4\" plywood is needed! " << thickness << " is not a valid thickness." << std::endl;
 }
 
 bool SubwooferFactory::sellSubwoofer(float price)
@@ -692,6 +691,8 @@ int main()
 {
     Example::main();
 
+    std::cout << std::setprecision(2);
+
     printSpacer("AquariumTank object testing");
 
     AquariumTank::Fish fish1,fish2;
@@ -743,7 +744,7 @@ int main()
     std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
     float m1Revenue = m1.chargeVisitor(10.f, visitor1);
     m1Revenue += m1.chargeVisitor(20.f, visitor2);
-    std::cout << "Museum m1 extracted $" << std::fixed << std::setprecision(2) << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
+    std::cout << "Museum m1 extracted $" << std::fixed << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
     m1.lobbyPoliticians(20000);
 
     printEmptyLine();
@@ -752,7 +753,7 @@ int main()
     std::cout << "Museum m2 now has " << m2.employeeCount << " employees" << std::endl;
     float m2Revenue = m2.chargeVisitor(25, visitor2);
     m2Revenue += m2.chargeVisitor(10.f, visitor1);
-    std::cout << "Museum m2 extracted $" << std::fixed << std::setprecision(2) << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
+    std::cout << "Museum m2 extracted $" << std::fixed << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
     m2.lobbyPoliticians(4999.5);
 
     printEmptyLine();
@@ -761,6 +762,34 @@ int main()
     visitor1.viewExhibit(4);
     visitor1.payAdmissionFee(25.f);
     visitor1.payVendor(4, 4.99f);
+
+    printSpacer("SubwooferFactory object testing");
+    SubwooferFactory factory1, factory2;
+    factory1.purchasePlywood(10, .5f);
+    factory1.purchasePlywood(10, .75f);
+
+    bool result = factory1.sellSubwoofer(500.f);
+    std::cout   << "SubwooferFactory::sellSubwoofer() result = " << ((result) ? "Success" : "No Sale")
+                << " There are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl; 
+
+    result = factory1.assembleSubwoofer(5.f,2);
+
+    std::cout   << "SubwooferFactory::assembleSubwoofer() result = " << ((result) ? "Assembly Completed" : "Couldn't Assemble")
+                << " There are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl; 
+
+    printEmptyLine();
+
+    factory2.purchasePlywood(3, .75f);
+    
+    result = factory2.assembleSubwoofer(5.f,2);
+
+    std::cout   << "SubwooferFactory::assembleSubwoofer() result = " << ((result) ? "Assembly Completed" : "Couldn't Assemble")
+                << " There are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl;
+
+    result = factory2.sellSubwoofer(500.f);
+    std::cout   << "SubwooferFactory::sellSubwoofer() result = " << ((result) ? "Success" : "No Sale")
+                << " There are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl;
+
 
     printSpacer("FreightTrain object testing");
 
@@ -801,11 +830,11 @@ int main()
     outputSection.adjustMasterOutputVolume(0.5f);
     float inV = 1;
     float outV = outputSection.amplifyLineLevelAudioToSpeakerLevel(inV);
-    std::cout   << "outputSection produces voltage of " << std::fixed << std::setprecision(3) << outV << "V"
+    std::cout   << "outputSection produces voltage of " << std::fixed << outV << "V"
                 << " from a " << inV << "V input" << std::defaultfloat << std::endl;
     inV = .5;
     outV = outputSection.amplifyLineLevelAudioToSpeakerLevel(inV);
-    std::cout   << "outputSection produces voltage of " << std::fixed << std::setprecision(3) << outV << "V"
+    std::cout   << "outputSection produces voltage of " << std::fixed << outV << "V"
                 << " from a " << inV << "V input" << std::defaultfloat << std::endl;
 
     printSpacer("PreampSection object testing");
@@ -815,11 +844,11 @@ int main()
     preampSection.adjustChannelGain(0, .9f);
     float preampInV = 0.05f;
     float preampOutV = preampSection.amplifyGuitarSignalToLineLevel(preampInV);
-    std::cout   << "preampSection produces voltage of " << std::fixed << std::setprecision(3) << preampOutV << "V"
+    std::cout   << "preampSection produces voltage of " << std::fixed << preampOutV << "V"
                 << " from a " << preampInV << "V input" << std::defaultfloat << std::endl;
     preampSection.warmUpTubes(100.f);
     preampOutV = preampSection.amplifyGuitarSignalToLineLevel(preampInV);
-    std::cout   << "preampSection produces voltage of " << std::fixed << std::setprecision(3) << preampOutV << "V"
+    std::cout   << "preampSection produces voltage of " << std::fixed << preampOutV << "V"
                 << " from a " << preampInV << "V input" << std::defaultfloat << std::endl;
 
     printSpacer("EQControls object testing");
@@ -835,11 +864,11 @@ int main()
     spkr.setAttenuatorValue(.9f);
     float speakerLevelVoltage = 10.f;
     double cabinetOutput = spkr.convertPowerToSound(speakerLevelVoltage);
-    std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << std::setprecision(3) << cabinetOutput << " Pascals "
+    std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << cabinetOutput << " Pascals "
                 << "from a " << speakerLevelVoltage << "V input voltage" << std::defaultfloat << std::endl;
     speakerLevelVoltage = 30.f;
     cabinetOutput = spkr.convertPowerToSound(speakerLevelVoltage);
-    std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << std::setprecision(3) << cabinetOutput << " Pascals "
+    std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << cabinetOutput << " Pascals "
                 << "from a " << speakerLevelVoltage << "V input voltage" << std::defaultfloat << std::endl;
 
     printSpacer("TubeGuitarAmpCombo object testing");
@@ -848,34 +877,34 @@ int main()
     amp.adjustEQ(0, 1.f);
     float guitarSignal = 0.04f;
     double ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     
     printEmptyLine();
 
     amp.ps.setStandbyState(true);
     ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
     guitarSignal = 0.06f;
     ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
     guitarSignal = 0.1f;
     ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
     guitarSignal = 0.15f;
     ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
     guitarSignal = 0.2f;
     ampOutput = amp.amplifyGuitarSound(guitarSignal);
-    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << std::setprecision(3) << ampOutput << " Pascals "
+    std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
                 
