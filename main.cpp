@@ -39,7 +39,7 @@ int main()
 //call Example::main()
 
 
-
+#include <iomanip>
 struct AquariumTank
 {
     float waterCapacity = 10.f;
@@ -49,14 +49,14 @@ struct AquariumTank
     int fishLivingIn = 0;
     struct Fish
     {
-        std::string name = "new fish";
-        std::string breed = "Goldfish";
-        float maxSalinity = 0.5f;
-        float age = 0.f;
-        float maxAge = 3.f;
-        Fish()
+        std::string name, breed;
+        float maxSalinity, age, maxAge;
+        Fish() : name("new fish"), breed("betta"), maxSalinity(0.75f), age(0.f), maxAge(3.f)
         { 
             std::cout << "AquariumTank::Fish '" <<  name << "' was created" << std::endl;
+            std::cout << "    it is a '" <<  breed << "'" <<std::endl;
+            std::cout << "    and can live in water with a salinity level of up to " << maxSalinity << std::endl;
+            std::cout << std::endl;
         }
 
         bool canLiveInThisWater(float waterPH, float waterSalinity)
@@ -87,7 +87,12 @@ struct AquariumTank
     void adjustPH(float phAdjustment);
 };
 
-AquariumTank::AquariumTank()
+AquariumTank::AquariumTank() :
+waterCapacity(15.f),
+pHLevel(7.f),
+currentWaterLevel(0.8f),
+evaporationRate(0.0000005),
+fishLivingIn(0)
 {
     std::cout << "an AquariumTank was created" << std::endl; 
 }
@@ -145,15 +150,13 @@ struct Museum
 
     struct Visitor
     {
-        std::string name = "visitor";
-        std::string nationality = "visitorsNationality";
-        int timesVisited = 0;
-        int age = 0;
+        std::string name, nationality;
+        int timesVisited, age;
         float satisfaction = 0.5f;
 
-        Visitor()
+        Visitor() : name("visitor"), nationality("unknown"), timesVisited(0), age(0), satisfaction(0.5f)
         {
-            std::cout << "a Museum::Visitor named '" << name << "' was created" << std::endl; 
+            std::cout << "a Museum::Visitor named '" << name << "' from the country '" << nationality << "' was created" << std::endl; 
         }
 
         float payAdmissionFee(float feeAmount)
@@ -305,11 +308,8 @@ void FreightTrain::blowAirHorn(float durationInSeconds)
 
 struct PowerSupply
 {
-    float mainsInputVoltage = 115.f;
-    float mainOutputVoltage = 0.f;
-    float heaterOutputVoltage = 0.f;
-    float maximumCurrentInAmps = 1.f;
-    bool fuseState { true };
+    float mainsInputVoltage, mainOutputVoltage, heaterOutputVoltage, maximumCurrentInAmps;
+    bool fuseState;
 
     PowerSupply();
 
@@ -323,9 +323,10 @@ struct PowerSupply
     float powerTransformerHeaterRatio = 0.055f;
 };
 
-PowerSupply::PowerSupply()
+PowerSupply::PowerSupply() : mainsInputVoltage(115.f), mainOutputVoltage(0.f), heaterOutputVoltage(0.f), maximumCurrentInAmps(.4f), fuseState(true)
 {
-    std::cout << "a PowerSupply object was created" << std::endl;
+    std::cout   << "a PowerSupply object was created with a mains input voltage of " << std::fixed << mainsInputVoltage 
+                << " that can supply " << maximumCurrentInAmps << std::defaultfloat << "A current"  << std::endl;
 }
 
 void PowerSupply::setPowerState(bool state)
