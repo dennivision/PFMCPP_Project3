@@ -70,12 +70,13 @@ int main()
 
 
 #include <iomanip>
+#include <vector>
 struct AquariumTank
 {
     float waterCapacity = 10.f;
     float pHLevel = 7.f;
     float currentWaterLevel = 0.7f;
-    double evaporationRate = 0.0000005;
+    double evaporationRate = 0.005;
     int fishLivingIn = 0;
     struct Fish
     {
@@ -115,13 +116,16 @@ struct AquariumTank
     void addFish(Fish fish, int quantity);
     void addWater(float amountOfWater);
     void adjustPH(float phAdjustment);
+
+
+    void ageTank(int days);
 };
 
 AquariumTank::AquariumTank() :
 waterCapacity(15.f),
 pHLevel(7.f),
 currentWaterLevel(0.8f),
-evaporationRate(0.0000005),
+evaporationRate(0.25),
 fishLivingIn(0)
 {
     std::cout << "an AquariumTank was created" << std::endl; 
@@ -170,6 +174,34 @@ void AquariumTank::adjustPH(float phAdjustment)
     std::cout << "AquariumTank::adjustPH() new pH level: " << pHLevel << std::endl; 
 }
 
+void AquariumTank::ageTank(int days)
+    {
+        float currentWaterAmount = waterCapacity * currentWaterLevel;
+        double waterEvaporated = 0;
+        int i = 0;
+        bool exitFlag = false;
+        while (i < days)
+        {
+            ++i;
+            waterEvaporated += evaporationRate;
+            currentWaterAmount -= static_cast<float>(evaporationRate);
+            if ( currentWaterAmount <= 0.f)
+            {
+                exitFlag = true;
+                currentWaterAmount = 0.f;
+            }
+            currentWaterLevel = currentWaterAmount / waterCapacity;
+            std::cout << "AquariumTank::ageTank() day " << std::defaultfloat << i << " water level: " << std::setprecision(4) << std::fixed << (100 * currentWaterLevel) << "%" << std::endl; 
+            if (exitFlag)
+            {
+                std::cout << "AquariumTank::ageTank() managed to kill " << std::defaultfloat << fishLivingIn << " fish " << std::endl;
+                fishLivingIn = 0;
+                break;
+            }
+        }
+        std::cout << "AquariumTank::ageTank() after " << std::defaultfloat << i << " days a total of " << std::setprecision(2) << waterEvaporated << " gallons of water evaporated" << std::endl; 
+    }
+
 struct Museum
 {
     int exhibitCount = 5;
@@ -177,6 +209,10 @@ struct Museum
     float UtilityCost = 3500.f;
     float monthlyRetailIncome = 5000.f;
     double monthlyGovernmentSubsidy = 15000;
+
+    float balance = 0.f;
+    float averageSalary = 3000.f;
+    float entranceFee = 25.f;
 
     struct Visitor
     {
@@ -196,6 +232,7 @@ struct Museum
                         << std::fixed << feeAmount << " and has now visited " << timesVisited << " times" << std::endl;
             return feeAmount;
         }
+        
         void viewExhibit(int exhibitNum);
         void payVendor(int vendorID, float amount);
     };
@@ -205,6 +242,8 @@ struct Museum
     float chargeVisitor(float amountToCharge, Visitor visitor) ;
     void addOrRemoveEmployees(int numberOfEmployees) { employeeCount += numberOfEmployees; }
     void lobbyPoliticians(float bribeAmount);
+
+    void simulateMonths(int months);
 };
 
 Museum::Museum()
@@ -240,6 +279,48 @@ void Museum::Visitor::payVendor(int vendorID, float amount)
                 << " $" << std::fixed << std::setprecision(2) << amount << std::endl;
 }
 
+void Museum::simulateMonths(int months)
+{
+    
+    int visitors = 0;
+    float startingBalance = balance;
+    int month = 0;
+    while(month < months)
+    {
+        ++month;
+        int visitorsThisMonth = static_cast<int>(monthlyRetailIncome / entranceFee);
+        int deviation = visitorsThisMonth * 20 / 100;
+        visitorsThisMonth = (rand() % deviation) + (visitorsThisMonth - (deviation / 2));
+        std::cout << "In month " << month << " there were " << visitorsThisMonth << " visitors" << std::endl;
+        int lastVisitor = visitors + visitorsThisMonth;
+        while(visitors <= lastVisitor)
+        {
+            ++visitors;
+            /*
+            Visitor x;
+            balance += chargeVisitor(entranceFee, x);
+            */
+            balance += entranceFee; // just to save output lines here
+        }
+        balance += static_cast<float>(monthlyGovernmentSubsidy);
+        if(balance < (employeeCount * averageSalary))
+        {
+            std::cout << "Museum cant pay " << employeeCount << " employees. Max it can pay is " << static_cast<int>(balance / averageSalary) << std::endl;
+            int employeesToFire = employeeCount - static_cast<int>(balance / averageSalary);
+            employeeCount -= employeesToFire;
+            std::cout << "Had to fire " << employeesToFire << " employees" << std::endl;
+        }
+        balance -= employeeCount * averageSalary;
+
+        std::cout << "Month " << month << " balance is  $" << std::fixed << std::setprecision(2) << balance << std::endl;
+    }
+    monthlyRetailIncome = ((balance - (static_cast<float>(monthlyGovernmentSubsidy) * month) + (employeeCount * averageSalary * month) - startingBalance) /  month);
+    std::cout    << "After " << month << " months the musuem had " << visitors << " visitors and now has a balance of $"
+                << std::fixed << balance << " and the average monthly retail income is now $"
+                << monthlyRetailIncome << std::endl;
+
+}
+
 struct SubwooferFactory
 {
     float plywoodInStock = 0.f;
@@ -252,6 +333,8 @@ struct SubwooferFactory
     bool assembleSubwoofer(float plywoodAmount, int driverAmount);
     void purchasePlywood(int sheets, float thickness);
     bool sellSubwoofer(float price);
+
+    void makeAFewSubwoofers();
 };
 
 SubwooferFactory::SubwooferFactory()
@@ -293,6 +376,19 @@ bool SubwooferFactory::sellSubwoofer(float price)
     return false;
 }
 
+void SubwooferFactory::makeAFewSubwoofers()
+{
+     int r = rand() % 10 + 1;
+     int i = 0;
+     while(i < r)
+     {
+         ++i;
+         if(!assembleSubwoofer(3.f, 1))
+            break;
+     }
+     std::cout << "SubwooferFactory::makeAFewSubwoofers() made " << i << " subwoofers out of " << r << " attempts" << std::endl;
+}
+
 struct FreightTrain
 {
     int numberOfLocomotives = 1;
@@ -306,6 +402,9 @@ struct FreightTrain
     void proceedToNextStop();
     void pickupOrDropoffCars(int numOfCars);
     void blowAirHorn(float durationInSeconds);
+
+    //void proceedSomeStops(unsigned int stops, int pickupDropOffList[]);
+    void proceedSomeStops(unsigned int stops, std::vector<int> pickupDropOffList);
 };
 
 FreightTrain::FreightTrain()
@@ -336,6 +435,42 @@ void FreightTrain::blowAirHorn(float durationInSeconds)
     }
 }
 
+/*
+void FreightTrain::proceedSomeStops(unsigned int stops, int pickupDropoffList[])
+{
+    unsigned int stopsTraveled = 0;
+    int freightCarDelta = 0;
+    while(stopsTraveled < stops)
+    {
+        proceedToNextStop();
+        if(stopsTraveled < sizeof pickupDropoffList )
+        {
+            pickupOrDropoffCars(pickupDropoffList[stopsTraveled]);
+            freightCarDelta += pickupDropoffList[stopsTraveled];
+        }
+        ++stopsTraveled;
+    }
+    std::cout << "Train Traveled a total of " << stopsTraveled << " out of " << stops << " and the car count changed by " << freightCarDelta << std::endl;
+}
+*/
+
+void FreightTrain::proceedSomeStops(unsigned int stops, std::vector<int> pickupDropoffList)
+{
+    unsigned int stopsTraveled = 0;
+    int freightCarDelta = 0;
+    while(stopsTraveled < stops)
+    {
+        proceedToNextStop();
+        if(stopsTraveled < pickupDropoffList.size() )
+        {
+            pickupOrDropoffCars(pickupDropoffList[stopsTraveled]);
+            freightCarDelta += pickupDropoffList[stopsTraveled];
+        }
+        ++stopsTraveled;
+    }
+    std::cout << "Train Traveled a total of " << stopsTraveled << " out of " << stops << " and the car count changed by " << freightCarDelta << std::endl;
+}
+
 struct PowerSupply
 {
     float mainsInputVoltage, mainOutputVoltage, heaterOutputVoltage, maximumCurrentInAmps;
@@ -351,6 +486,8 @@ struct PowerSupply
     bool standbyState = false;
     float powerTransformerMainRatio = 4.f;
     float powerTransformerHeaterRatio = 0.055f;
+
+    void randomlyFlipSwitches(int cycles);
 };
 
 PowerSupply::PowerSupply() : mainsInputVoltage(115.f), mainOutputVoltage(0.f), heaterOutputVoltage(0.f), maximumCurrentInAmps(.4f), fuseState(true)
@@ -400,6 +537,17 @@ void PowerSupply::blowFuse()
     std::cout << "PowerSupply::blowFuse() Poof! the fuse has blown" << std::endl;
 }
 
+void PowerSupply::randomlyFlipSwitches(int cycles)
+{
+    for(int i = 0; i<cycles; ++i)
+    {
+        setPowerState((rand() % 2) == 1);
+        setStandbyState((rand() % 2) == 1);
+    }
+    std::cout   << "PowerSupply::randomlyFlipSwitches() Results:" << std::endl << "  Power is " << ( (powerState) ? "ON" : "OFF" )
+                << " and Standby is " << ( (standbyState) ? "ON" : "STANDBY" ) << std::endl; 
+}
+
 struct OutputSection
 {
     int numberOfOutputTubes = 2;
@@ -417,6 +565,8 @@ struct OutputSection
     bool tubesAreWarm = false;
     float masterOutputGain = 0.5f;
     float gainFactor = numberOfOutputTubes * 24.f;
+
+    void randomNoise(float maxLevel, int cycles);
 };
 
 OutputSection::OutputSection()
@@ -447,6 +597,17 @@ float OutputSection::amplifyLineLevelAudioToSpeakerLevel(float inputSignal)
     return 0.f;
 }
 
+void OutputSection::randomNoise(float maxLevel, int cycles)
+{
+    for (int i = 0; i < cycles; ++i)
+    {
+        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        float n = amplifyLineLevelAudioToSpeakerLevel(x);
+        std::cout   << "OutputSection produces voltage of " << std::fixed << n << "V"
+                << " from a " << x << "V noise input signal" << std::defaultfloat << std::endl;
+    }
+}
+
 struct PreampSection
 {
     int numberOfPreampTubes = 2;
@@ -463,6 +624,8 @@ struct PreampSection
 
     bool tubesAreWarm = false;
     float gainFactor = numberOfPreampTubes * 10.f;
+
+    void randomNoise(float maxLevel, int cycles);
 };
 
 PreampSection::PreampSection()
@@ -511,6 +674,17 @@ float PreampSection::amplifyGuitarSignalToLineLevel(float inputSignal)
     return 0.f;
 }
 
+void PreampSection::randomNoise(float maxLevel, int cycles)
+{
+    for (int i = 0; i < cycles; ++i)
+    {
+        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        float n = amplifyGuitarSignalToLineLevel(x);
+        std::cout   << "PreampSection produces voltage of " << std::fixed << n << "V"
+                << " from a " << x << "V noise input signal" << std::defaultfloat << std::endl;
+    }
+}
+
 struct EQControls
 {
     float trebleSetting = 0.5f;
@@ -524,6 +698,8 @@ struct EQControls
     void adjustTrebleSetting(float value);
     void adjustBassSetting(float value);
     void setBypass(bool value);
+
+    void randomlyTurnKnobs(int cycles);
 };
 
 EQControls::EQControls()
@@ -549,6 +725,35 @@ void EQControls::setBypass(bool value)
     std::cout << "EQControls::setBypass() EQ control bypass setting is " << ( (isBypassed) ? "ON" : "OFF" ) << std::endl;
 }
 
+void EQControls::randomlyTurnKnobs(int turns)
+{
+    for(int i = 0; i < turns ; ++i)
+    {
+        int knobToTurn = rand() % 3;
+        if(knobToTurn == 0)
+        {
+            trebleSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            std::cout << "Randomly set treble knob to " << std::fixed << (100 * trebleSetting) << "%" << std::endl;
+        }
+        else if (knobToTurn == 1)
+        {
+            midrangeSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            std::cout << "Randomly set midrange knob to " << std::fixed << (100 * midrangeSetting) << "%" << std::endl;
+        }
+        else if (knobToTurn == 2)
+        {
+            lowSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            std::cout << "Randomly set bass knob to " << std::fixed << (100 * lowSetting) << "%" << std::endl;
+        }
+        else if (knobToTurn == 3)
+        {
+            presenceSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            std::cout << "Randomly set presence knob to " << std::fixed << (100 * presenceSetting) << "%" << std::endl;
+        }
+
+    }
+}
+
 struct SpeakerCabinet
 {
     int numberOfSpeakers = 1;
@@ -565,6 +770,8 @@ struct SpeakerCabinet
 
     bool speakersNotBlown = true;
     float attenuation = 1.f;
+
+    void randomlySetAttenuator(int cycles);
 };
 
 SpeakerCabinet::SpeakerCabinet()
@@ -602,6 +809,15 @@ void SpeakerCabinet::releaseMagicSmoke()
     speakersNotBlown = false;
 }
 
+void SpeakerCabinet::randomlySetAttenuator(int cycles)
+{
+    for(int i = 0; i < cycles ; ++i)
+    {
+        setAttenuatorValue(static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+    }
+    std::cout << "SpeakerCabinet::randomlySetAttenuator final value: " << attenuation << " after " << cycles << " cycles " << std::endl;
+}
+
 struct TubeGuitarAmpCombo
 {
     PowerSupply ps;
@@ -615,6 +831,8 @@ struct TubeGuitarAmpCombo
     void setPowerState( bool value );
     void adjustEQ( int band, float value );
     double amplifyGuitarSound( float guitarSignal );
+
+    void amplifyRandomNoise(float maxLevel, int cycles);
 };
 
 TubeGuitarAmpCombo::TubeGuitarAmpCombo()
@@ -660,6 +878,17 @@ double TubeGuitarAmpCombo::amplifyGuitarSound(float guitarSignal)
     std::cout << "Fuse is " << ( (ps.fuseState) ? "GOOD" : "BLOWN" ) << std::endl;
     return 0;
 }
+
+void TubeGuitarAmpCombo::amplifyRandomNoise(float maxLevel, int cycles)
+{
+    for (int i = 0; i < cycles; ++i)
+    {
+        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        double n = amplifyGuitarSound(x);
+        std::cout << "TubeGuitarAmpCombo noise " << std::fixed << n << " Pascals "
+                << "from a " << x << "V noise signal" << std::defaultfloat << std::endl;
+    }
+}
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -692,6 +921,8 @@ int main()
 
     std::cout << std::setprecision(2);
 
+    srand( static_cast<unsigned int>( time( nullptr ) ) );
+
     printSpacer("AquariumTank object testing");
 
     AquariumTank::Fish fish1,fish2;
@@ -716,11 +947,17 @@ int main()
     tank1.addFish(fish1, 10);
     tank1.adjustPH(-.5f);
 
+    tank1.ageTank(10);
+
     printEmptyLine();
 
     tank2.addWater(5.f);
     tank2.adjustPH(1.5f);
     tank2.addFish(fish2, 5);
+    tank2.adjustPH(-1.f);
+    tank2.addFish(fish2, 4);
+
+    tank2.ageTank(120);
 
     printSpacer("Museum Object Testing");
 
@@ -746,6 +983,9 @@ int main()
     std::cout << "Museum m1 extracted $" << std::fixed << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
     m1.lobbyPoliticians(20000);
 
+    
+    m1.simulateMonths(6);
+
     printEmptyLine();
 
     m2.addOrRemoveEmployees(40);
@@ -754,6 +994,10 @@ int main()
     m2Revenue += m2.chargeVisitor(10.f, visitor1);
     std::cout << "Museum m2 extracted $" << std::fixed << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
     m2.lobbyPoliticians(4999.5);
+    m2.monthlyRetailIncome = 100000.f;
+    m2.simulateMonths(12);
+    m2.addOrRemoveEmployees(10);
+    m2.simulateMonths(12);
 
     printEmptyLine();
 
@@ -789,6 +1033,20 @@ int main()
     std::cout   << "SubwooferFactory::sellSubwoofer() result = " << ((result) ? "Success" : "No Sale")
                 << " There are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl;
 
+    printEmptyLine();
+
+
+
+    factory2.purchasePlywood(10,.75f);
+    factory2.subwooferDriversInStock += 20;
+    factory2.makeAFewSubwoofers();
+    printEmptyLine();
+    factory2.makeAFewSubwoofers();
+    printEmptyLine();
+    factory2.makeAFewSubwoofers();
+
+    std::cout   << "SubwooferFactory after makeAFewSubwoofers()  was excuted 3 times "
+                << " there are " << factory1.completedSubwoofers << " completed subwoofers in stock." << std::endl;
 
     printSpacer("FreightTrain object testing");
 
@@ -804,6 +1062,11 @@ int main()
     train2.proceedToNextStop();
     train2.pickupOrDropoffCars(-40);
     train2.blowAirHorn(1.f);
+
+    printEmptyLine();
+    //int dropofflist[]{5,-1,4,-4,3}; 
+    std::vector<int> dropofflist{5,-1,4,-4,3};
+    train2.proceedSomeStops(5, dropofflist);
 
     printSpacer("PowerSupply object testing");
 
@@ -821,6 +1084,10 @@ int main()
     ps2.setStandbyState(true);
     ps2.blowFuse();
     ps2.setPowerState(false);
+    
+    printEmptyLine();
+
+    ps2.randomlyFlipSwitches(10); // new roadie
 
     printSpacer("OutputSection object testing");
     
@@ -836,6 +1103,7 @@ int main()
     std::cout   << "outputSection produces voltage of " << std::fixed << outV << "V"
                 << " from a " << inV << "V input" << std::defaultfloat << std::endl;
 
+    outputSection.randomNoise(0.01f, 10);
     printSpacer("PreampSection object testing");
     
     PreampSection preampSection;
@@ -850,12 +1118,16 @@ int main()
     std::cout   << "preampSection produces voltage of " << std::fixed << preampOutV << "V"
                 << " from a " << preampInV << "V input" << std::defaultfloat << std::endl;
 
+    preampSection.randomNoise(0.01f, 20);
+
     printSpacer("EQControls object testing");
 
     EQControls eq;
     eq.adjustTrebleSetting(.75f);
     eq.adjustBassSetting(.8f);
     eq.setBypass(true);
+
+    eq.randomlyTurnKnobs(8);
 
     printSpacer("SpeakerCabinet object testing");
 
@@ -869,6 +1141,8 @@ int main()
     cabinetOutput = spkr.convertPowerToSound(speakerLevelVoltage);
     std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << cabinetOutput << " Pascals "
                 << "from a " << speakerLevelVoltage << "V input voltage" << std::defaultfloat << std::endl;
+
+    spkr.randomlySetAttenuator(5);
 
     printSpacer("TubeGuitarAmpCombo object testing");
     TubeGuitarAmpCombo amp;
@@ -906,8 +1180,12 @@ int main()
     std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     printEmptyLine();
+
+    TubeGuitarAmpCombo amp2;
+    amp2.setPowerState(true);
+    amp2.ps.setStandbyState(true);
+    amp2.amplifyRandomNoise(.15f, 10);
                 
-    printSpacer("END");
   
     std::cout << "good to go!" << std::endl;
 }
