@@ -76,7 +76,7 @@ struct AquariumTank
     float waterCapacity = 10.f;
     float pHLevel = 7.f;
     float currentWaterLevel = 0.7f;
-    double evaporationRate = 0.005;
+    float evaporationRate = 0.005f;
     int fishLivingIn = 0;
     struct Fish
     {
@@ -125,7 +125,7 @@ AquariumTank::AquariumTank() :
 waterCapacity(15.f),
 pHLevel(7.f),
 currentWaterLevel(0.8f),
-evaporationRate(0.25),
+evaporationRate(0.25f),
 fishLivingIn(0)
 {
     std::cout << "an AquariumTank was created" << std::endl; 
@@ -177,14 +177,14 @@ void AquariumTank::adjustPH(float phAdjustment)
 void AquariumTank::ageTank(int days)
     {
         float currentWaterAmount = waterCapacity * currentWaterLevel;
-        double waterEvaporated = 0;
+        float waterEvaporated = 0;
         int i = 0;
         bool exitFlag = false;
         while (i < days)
         {
             ++i;
             waterEvaporated += evaporationRate;
-            currentWaterAmount -= static_cast<float>(evaporationRate);
+            currentWaterAmount -= evaporationRate;
             if ( currentWaterAmount <= 0.f)
             {
                 exitFlag = true;
@@ -208,7 +208,7 @@ struct Museum
     int employeeCount = 0;
     float UtilityCost = 3500.f;
     float monthlyRetailIncome = 5000.f;
-    double monthlyGovernmentSubsidy = 15000;
+    float monthlyGovernmentSubsidy = 15000;
 
     float balance = 0.f;
     float averageSalary = 3000.f;
@@ -288,7 +288,7 @@ void Museum::simulateMonths(int months)
     while(month < months)
     {
         ++month;
-        int visitorsThisMonth = static_cast<int>(monthlyRetailIncome / entranceFee);
+        int visitorsThisMonth = monthlyRetailIncome / entranceFee;
         int deviation = visitorsThisMonth * 20 / 100;
         visitorsThisMonth = (rand() % deviation) + (visitorsThisMonth - (deviation / 2));
         std::cout << "In month " << month << " there were " << visitorsThisMonth << " visitors" << std::endl;
@@ -302,11 +302,11 @@ void Museum::simulateMonths(int months)
             */
             balance += entranceFee; // just to save output lines here
         }
-        balance += static_cast<float>(monthlyGovernmentSubsidy);
+        balance += monthlyGovernmentSubsidy;
         if(balance < (employeeCount * averageSalary))
         {
-            std::cout << "Museum cant pay " << employeeCount << " employees. Max it can pay is " << static_cast<int>(balance / averageSalary) << std::endl;
-            int employeesToFire = employeeCount - static_cast<int>(balance / averageSalary);
+            std::cout << "Museum cant pay " << employeeCount << " employees. Max it can pay is " << (balance / averageSalary) << std::endl;
+            int employeesToFire = employeeCount - (balance / averageSalary);
             employeeCount -= employeesToFire;
             std::cout << "Had to fire " << employeesToFire << " employees" << std::endl;
         }
@@ -314,7 +314,7 @@ void Museum::simulateMonths(int months)
 
         std::cout << "Month " << month << " balance is  $" << std::fixed << std::setprecision(2) << balance << std::endl;
     }
-    monthlyRetailIncome = ((balance - (static_cast<float>(monthlyGovernmentSubsidy) * month) + (employeeCount * averageSalary * month) - startingBalance) /  month);
+    monthlyRetailIncome = ((balance - (monthlyGovernmentSubsidy * month) + (employeeCount * averageSalary * month) - startingBalance) /  month);
     std::cout    << "After " << month << " months the musuem had " << visitors << " visitors and now has a balance of $"
                 << std::fixed << balance << " and the average monthly retail income is now $"
                 << monthlyRetailIncome << std::endl;
@@ -601,7 +601,7 @@ void OutputSection::randomNoise(float maxLevel, int cycles)
 {
     for (int i = 0; i < cycles; ++i)
     {
-        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        float x = rand() / (RAND_MAX / maxLevel);
         float n = amplifyLineLevelAudioToSpeakerLevel(x);
         std::cout   << "OutputSection produces voltage of " << std::fixed << n << "V"
                 << " from a " << x << "V noise input signal" << std::defaultfloat << std::endl;
@@ -678,7 +678,7 @@ void PreampSection::randomNoise(float maxLevel, int cycles)
 {
     for (int i = 0; i < cycles; ++i)
     {
-        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        float x = rand() / (RAND_MAX / maxLevel);
         float n = amplifyGuitarSignalToLineLevel(x);
         std::cout   << "PreampSection produces voltage of " << std::fixed << n << "V"
                 << " from a " << x << "V noise input signal" << std::defaultfloat << std::endl;
@@ -732,22 +732,22 @@ void EQControls::randomlyTurnKnobs(int turns)
         int knobToTurn = rand() % 3;
         if(knobToTurn == 0)
         {
-            trebleSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            trebleSetting = rand() / RAND_MAX;
             std::cout << "Randomly set treble knob to " << std::fixed << (100 * trebleSetting) << "%" << std::endl;
         }
         else if (knobToTurn == 1)
         {
-            midrangeSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            midrangeSetting = rand() / RAND_MAX;
             std::cout << "Randomly set midrange knob to " << std::fixed << (100 * midrangeSetting) << "%" << std::endl;
         }
         else if (knobToTurn == 2)
         {
-            lowSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            lowSetting = rand() / RAND_MAX;
             std::cout << "Randomly set bass knob to " << std::fixed << (100 * lowSetting) << "%" << std::endl;
         }
         else if (knobToTurn == 3)
         {
-            presenceSetting = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            presenceSetting = rand() / RAND_MAX;
             std::cout << "Randomly set presence knob to " << std::fixed << (100 * presenceSetting) << "%" << std::endl;
         }
 
@@ -764,7 +764,7 @@ struct SpeakerCabinet
 
     SpeakerCabinet();
 
-    double convertPowerToSound( float inputVoltage );
+    float convertPowerToSound( float inputVoltage );
     void setAttenuatorValue( float value );
     void releaseMagicSmoke();
 
@@ -779,7 +779,7 @@ SpeakerCabinet::SpeakerCabinet()
     std::cout << "a SpeakerCabinet object was created" << std::endl;
 }
 
-double SpeakerCabinet::convertPowerToSound(float inputVoltage)
+float SpeakerCabinet::convertPowerToSound(float inputVoltage)
 {
     if(speakersNotBlown)
     {
@@ -789,7 +789,7 @@ double SpeakerCabinet::convertPowerToSound(float inputVoltage)
         {
             std::cout << "SpeakerCabinet::convertPowerToSound() speaker cabinet makes some sound" << std::endl;
             // convert votage to assuming 2 pascals per watt 
-            return(static_cast<double>(inputVoltage) * (pascalsPerWatt * static_cast<double>(wattageRequsted)));
+            return(inputVoltage * (pascalsPerWatt * wattageRequsted));
         }
         releaseMagicSmoke();
     }
@@ -813,7 +813,7 @@ void SpeakerCabinet::randomlySetAttenuator(int cycles)
 {
     for(int i = 0; i < cycles ; ++i)
     {
-        setAttenuatorValue(static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+        setAttenuatorValue(rand() / RAND_MAX);
     }
     std::cout << "SpeakerCabinet::randomlySetAttenuator final value: " << attenuation << " after " << cycles << " cycles " << std::endl;
 }
@@ -883,7 +883,7 @@ void TubeGuitarAmpCombo::amplifyRandomNoise(float maxLevel, int cycles)
 {
     for (int i = 0; i < cycles; ++i)
     {
-        float x = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/maxLevel));
+        float x = rand() / (RAND_MAX/maxLevel);
         double n = amplifyGuitarSound(x);
         std::cout << "TubeGuitarAmpCombo noise " << std::fixed << n << " Pascals "
                 << "from a " << x << "V noise signal" << std::defaultfloat << std::endl;
@@ -921,7 +921,7 @@ int main()
 
     std::cout << std::setprecision(2);
 
-    srand( static_cast<unsigned int>( time( nullptr ) ) );
+    srand(  time( nullptr ) );
 
     printSpacer("AquariumTank object testing");
 
