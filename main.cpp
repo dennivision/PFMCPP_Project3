@@ -784,7 +784,7 @@ float SpeakerCabinet::convertPowerToSound(float inputVoltage)
     if(speakersNotBlown)
     {
         float wattageRequsted = inputVoltage * (inputVoltage / impedance) * attenuation;
-        double pascalsPerWatt = 2; // - using pascals because dB logarithmic stuff hard without framework to do math for me
+        float pascalsPerWatt = 2; // - using pascals because dB logarithmic stuff hard without framework to do math for me
         if(wattageRequsted <= maxWattage * 1.1f)
         {
             std::cout << "SpeakerCabinet::convertPowerToSound() speaker cabinet makes some sound" << std::endl;
@@ -830,7 +830,7 @@ struct TubeGuitarAmpCombo
 
     void setPowerState( bool value );
     void adjustEQ( int band, float value );
-    double amplifyGuitarSound( float guitarSignal );
+    float amplifyGuitarSound( float guitarSignal );
 
     void amplifyRandomNoise(float maxLevel, int cycles);
 };
@@ -863,7 +863,7 @@ void TubeGuitarAmpCombo::adjustEQ(int band, float value)
     }
 }
 
-double TubeGuitarAmpCombo::amplifyGuitarSound(float guitarSignal)
+float TubeGuitarAmpCombo::amplifyGuitarSound(float guitarSignal)
 {
     if (ps.fuseState && ps.powerState && ps.standbyState)
     {
@@ -884,7 +884,7 @@ void TubeGuitarAmpCombo::amplifyRandomNoise(float maxLevel, int cycles)
     for (int i = 0; i < cycles; ++i)
     {
         float x = rand() / (RAND_MAX/maxLevel);
-        double n = amplifyGuitarSound(x);
+        float n = amplifyGuitarSound(x);
         std::cout << "TubeGuitarAmpCombo noise " << std::fixed << n << " Pascals "
                 << "from a " << x << "V noise signal" << std::defaultfloat << std::endl;
     }
@@ -1134,7 +1134,7 @@ int main()
     SpeakerCabinet spkr;
     spkr.setAttenuatorValue(.9f);
     float speakerLevelVoltage = 10.f;
-    double cabinetOutput = spkr.convertPowerToSound(speakerLevelVoltage);
+    float cabinetOutput = spkr.convertPowerToSound(speakerLevelVoltage);
     std::cout   << "SpeakerCabinet produces acoustic output of " << std::fixed << cabinetOutput << " Pascals "
                 << "from a " << speakerLevelVoltage << "V input voltage" << std::defaultfloat << std::endl;
     speakerLevelVoltage = 30.f;
@@ -1149,7 +1149,7 @@ int main()
     amp.setPowerState(true);
     amp.adjustEQ(0, 1.f);
     float guitarSignal = 0.04f;
-    double ampOutput = amp.amplifyGuitarSound(guitarSignal);
+    float ampOutput = amp.amplifyGuitarSound(guitarSignal);
     std::cout   << "TubeGuitarAmpCombo produces acoustic output of " << std::fixed << ampOutput << " Pascals "
                 << "from a " << guitarSignal << "V guitar input voltage" << std::defaultfloat << std::endl;
     
